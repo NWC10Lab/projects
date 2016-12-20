@@ -1,60 +1,65 @@
-<?php 
+
+<?php
 include './inc/funciones.php';
-$mng = ""; //mensaje de respuesta enviar Email
-$mensajeUnico = false;
-$styleBlock = "";
-if (isset($_GET["del"]) && $_GET["del"] != "") {
-	if (desactivarLead($_GET["del"])) {
-		$mng = "Desactivado correctamente";
-	} else {
-		$mng = "No ha podido ser desactivado";
-	}
+$mng="";//mensaje de respuesta enviar Email
+$mensajeUnico=false;
+$styleBlock="";
+if (isset($_GET["del"])&&$_GET["del"]!="") {
+    if(desactivarLead($_GET["del"])){
+        $mng = "Desactivado correctamente";
+    }else{
+        $mng = "No ha podido ser desactivado";
+    }  
 }
 
 //inicio lista usuarios
-$usuarios = array();
-if (isset($_GET["asistencia"]) && $_GET["asistencia"] != "") {
-	$usuarios = selectAsistentes();
-	$exten = "?asistencia=1";
+$usuarios= array();
+if (isset($_GET["asistencia"])&&$_GET["asistencia"]!="") {
+	$usuarios= selectAsistentes();
+	$exten="?asistencia=1";
 	//$usuarios= selectLeads();
+	
+}else{
 
-} else {
-
-	$usuarios = selectLeads(); //array de todos los leads
-	$exten = "";
+	$usuarios= selectLeads();//array de todos los leads
+	$exten="";
 }
+
+
+
 
 //si existe formulario email
-if (isset($_POST["formEmail"]) && isset($_POST["asunto"]) && isset($_POST["mensaje"]) && isset($_POST["autor"]) && isset($_POST["correo"]) &&
-	$_POST["asunto"] != "" && $_POST["mensaje"] != "") {
-	extract($_POST);
-	$mensajesEnviados = true;
-	//si en el formulario se ha pasado email, se manda un único email a ese usuario
-	if (isset($nombre) && isset($email)) {
-		if (!enviarEmail($email, $asunto, $mensaje, $autor, $correo, $nombre)) {
-			$mensajesEnviados = false;
-		}
-		//si no, se envia a todos
-	} else {
-		for ($i = 0; $i < count($usuarios); $i++) {
-			if (!enviarEmail($usuarios[$i]["email"], $asunto, $mensaje, $autor, $correo, $usuarios[$i]["nombre"])) {
-				$mensajesEnviados = false;
-			}
-		}
-	}
-	if ($mensajesEnviados) {
-		$mng = "Mensajes enviados correctamente";
-	} else {
-		$mng = "Error al mandar los mensajes";
-	}
-
+if(isset($_POST["formEmail"])&&isset($_POST["asunto"])&&isset($_POST["mensaje"])&&isset($_POST["autor"])&&isset($_POST["correo"])&&
+         $_POST["asunto"]!=""&& $_POST["mensaje"]!=""){
+         extract($_POST);
+         $mensajesEnviados=true;
+    //si en el formulario se ha pasado email, se manda un único email a ese usuario
+    if(isset($nombre)&&isset($email)){
+        if(!enviarEmail($email, $asunto, $mensaje,$autor,$correo, $nombre)){
+            $mensajesEnviados=false;
+        }
+    //si no, se envia a todos
+    }else{     
+    for($i=0;$i<count($usuarios);$i++){
+        if(!enviarEmail($usuarios[$i]["email"], $asunto, $mensaje,$autor,$correo, $usuarios[$i]["nombre"])){
+            $mensajesEnviados=false;
+        }
+    }
+    }
+    if($mensajesEnviados){
+        $mng="Mensajes enviados correctamente";
+    }else{
+        $mng="Error al mandar los mensajes";
+    }
+   
 }
 
-if (isset($_GET["em"]) && isset($_GET["email"]) && isset($_GET["nombre"])) {
-	extract($_GET);
-	$mensajeUnico = true;
-	$styleBlock = "Display:block";
-} ?>
+if (isset($_GET["em"])&&isset($_GET["email"])&&isset($_GET["nombre"])) {
+    extract($_GET);
+    $mensajeUnico = true;
+    $styleBlock="Display:block";
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -62,7 +67,7 @@ if (isset($_GET["em"]) && isset($_GET["email"]) && isset($_GET["nombre"])) {
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<!--		<meta charset="utf-8" />-->
 	<meta charset="UTF-8">
-	<title>Casanova - Events</title>
+	<title>NWC10 - Events</title>
 
 	<meta name="description" content="Static &amp; Dynamic Tables" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
@@ -107,16 +112,14 @@ if (isset($_GET["em"]) && isset($_GET["email"]) && isset($_GET["nombre"])) {
 	<div id="navbar" class="navbar navbar-default          ace-save-state">
 		<div class="navbar-container ace-save-state" id="navbar-container">
 
-
 			<div class="navbar-header pull-left">
 				<a href="" class="navbar-brand">
 					<small>
 							<i class="fa fa-leaf"></i>
-							Casanova Events
+							NWC10 Events
 						</small>
 				</a>
 			</div>
-
 
 		</div>
 		<!-- /.navbar-container -->
@@ -136,9 +139,7 @@ if (isset($_GET["em"]) && isset($_GET["email"]) && isset($_GET["nombre"])) {
 				} catch (e) {}
 			</script>
 
-
 			<ul class="nav nav-list">
-
 
 				<li class="active open">
 					<a href="#" class="dropdown-toggle">
@@ -153,7 +154,7 @@ if (isset($_GET["em"]) && isset($_GET["email"]) && isset($_GET["nombre"])) {
 					<ul class="submenu">
 						<li class="active">
 							<a href="">
-								<i class="menu-icon fa fa-caret-right"></i> Huawai Event
+								<i class="menu-icon fa fa-caret-right"></i> Cena navidad NWC10
 							</a>
 
 							<b class="arrow"></b>
@@ -169,7 +170,6 @@ if (isset($_GET["em"]) && isset($_GET["email"]) && isset($_GET["nombre"])) {
 					</ul>
 				</li>
 
-
 			</ul>
 			<!-- /.nav-list -->
 
@@ -181,10 +181,8 @@ if (isset($_GET["em"]) && isset($_GET["email"]) && isset($_GET["nombre"])) {
 		<div class="main-content">
 			<div class="main-content-inner">
 
-
 				<div class="page-content">
 					<div class="ace-settings-container" id="ace-settings-container">
-
 
 						<div class="ace-settings-box clearfix" id="ace-settings-box">
 							<div class="pull-left width-50">
@@ -251,7 +249,6 @@ if (isset($_GET["em"]) && isset($_GET["email"]) && isset($_GET["nombre"])) {
 					</div>
 					<!-- /.ace-settings-container -->
 
-
 					<div class="row">
 						<div class="col-xs-12">
 							<!-- PAGE CONTENT BEGINS -->
@@ -270,7 +267,6 @@ if (isset($_GET["em"]) && isset($_GET["email"]) && isset($_GET["nombre"])) {
 										</div>
 										<div class="">
 											<div class="btn" id="envEmail">Enviar E-mail</div>
-
 
 											<div id="formulario" class="oculto " style="<?=$styleBlock?>">
 												<form method="post" action="<?=$_SERVER['PHP_SELF']?><?= $exten ?>">
@@ -391,7 +387,6 @@ if (isset($_GET["em"]) && isset($_GET["email"]) && isset($_GET["nombre"])) {
 												<?php } ?>
 
 												<!--borrar-->
-
 
 											</tbody>
 										</table>
@@ -589,30 +584,23 @@ if (isset($_GET["em"]) && isset($_GET["email"]) && isset($_GET["nombre"])) {
 						}
 					],
 					"aaSorting": [],
-
 					//"bProcessing": true,
 					//"bServerSide": true,
 					//"sAjaxSource": "http://127.0.0.1/table.php"	,
-
 					//,
 					//"sScrollY": "200px",
 					//"bPaginate": false,
-
 					//"sScrollX": "100%",
 					//"sScrollXInner": "120%",
 					//"bScrollCollapse": true,
 					//Note: if you are applying horizontal scrolling (sScrollX) on a ".table-bordered"
 					//you may want to wrap the table inside a "div.dataTables_borderWrap" element
-
 					//"iDisplayLength": 50
-
 					select: {
 						style: 'multi'
 					}
 				});
-
 			$.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
-
 			new $.fn.dataTable.Buttons(myTable, {
 				buttons: [{
 						"extend": "colvis",
@@ -647,19 +635,15 @@ if (isset($_GET["em"]) && isset($_GET["email"]) && isset($_GET["nombre"])) {
 				]
 			});
 			myTable.buttons().container().appendTo($('.tableTools-container'));
-
 			//style the message box
 			var defaultCopyAction = myTable.button(1).action();
 			myTable.button(1).action(function(e, dt, button, config) {
 				defaultCopyAction(e, dt, button, config);
 				$('.dt-button-info').addClass('gritter-item-wrapper gritter-info gritter-center white');
 			});
-
 			var defaultColvisAction = myTable.button(0).action();
 			myTable.button(0).action(function(e, dt, button, config) {
-
 				defaultColvisAction(e, dt, button, config);
-
 				if ($('.dt-button-collection > .dropdown-menu').length == 0) {
 					$('.dt-button-collection')
 						.wrapInner('<ul class="dropdown-menu dropdown-light dropdown-caret dropdown-caret" />')
@@ -667,9 +651,7 @@ if (isset($_GET["em"]) && isset($_GET["email"]) && isset($_GET["nombre"])) {
 				}
 				$('.dt-button-collection').appendTo('.tableTools-container .dt-buttons')
 			});
-
 			////
-
 			setTimeout(function() {
 				$($('.tableTools-container')).find('a.dt-button').each(function() {
 					var div = $(this).find(' > div').first();
@@ -683,7 +665,6 @@ if (isset($_GET["em"]) && isset($_GET["email"]) && isset($_GET["nombre"])) {
 					});
 				});
 			}, 500);
-
 			myTable.on('select', function(e, dt, type, index) {
 				if (type === 'row') {
 					$(myTable.row(index).node()).find('input:checkbox').prop('checked', true);
@@ -694,48 +675,40 @@ if (isset($_GET["em"]) && isset($_GET["email"]) && isset($_GET["nombre"])) {
 					$(myTable.row(index).node()).find('input:checkbox').prop('checked', false);
 				}
 			});
-
 			/////////////////////////////////
 			//table checkboxes
 			$('th input[type=checkbox], td input[type=checkbox]').prop('checked', false);
-
 			//select/deselect all rows according to table header checkbox
 			$('#dynamic-table > thead > tr > th input[type=checkbox], #dynamic-table_wrapper input[type=checkbox]').eq(0).on('click', function() {
 				var th_checked = this.checked; //checkbox inside "TH" table header
-
 				$('#dynamic-table').find('tbody > tr').each(function() {
 					var row = this;
 					if (th_checked) myTable.row(row).select();
 					else myTable.row(row).deselect();
 				});
 			});
-
 			//select/deselect a row when the checkbox is checked/unchecked
 			$('#dynamic-table').on('click', 'td input[type=checkbox]', function() {
 				var row = $(this).closest('tr').get(0);
 				if (this.checked) myTable.row(row).deselect();
 				else myTable.row(row).select();
 			});
-
 			$(document).on('click', '#dynamic-table .dropdown-toggle', function(e) {
 				e.stopImmediatePropagation();
 				e.stopPropagation();
 				e.preventDefault();
 			});
-
 			//And for the first simple table, which doesn't have TableTools or dataTables
 			//select/deselect all rows according to table header checkbox
 			var active_class = 'active';
 			$('#simple-table > thead > tr > th input[type=checkbox]').eq(0).on('click', function() {
 				var th_checked = this.checked; //checkbox inside "TH" table header
-
 				$(this).closest('table').find('tbody > tr').each(function() {
 					var row = this;
 					if (th_checked) $(row).addClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', true);
 					else $(row).removeClass(active_class).find('input[type=checkbox]').eq(0).prop('checked', false);
 				});
 			});
-
 			//select/deselect a row when the checkbox is checked/unchecked
 			$('#simple-table').on('click', 'td input[type=checkbox]', function() {
 				var $row = $(this).closest('tr');
@@ -743,27 +716,22 @@ if (isset($_GET["em"]) && isset($_GET["email"]) && isset($_GET["nombre"])) {
 				if (this.checked) $row.addClass(active_class);
 				else $row.removeClass(active_class);
 			});
-
 			/********************************/
 			//add tooltip for small view action buttons in dropdown menu
 			$('[data-rel="tooltip"]').tooltip({
 				placement: tooltip_placement
 			});
-
 			//tooltip placement on right or left
 			function tooltip_placement(context, source) {
 				var $source = $(source);
 				var $parent = $source.closest('table')
 				var off1 = $parent.offset();
 				var w1 = $parent.width();
-
 				var off2 = $source.offset();
 				//var w2 = $source.width();
-
 				if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
 				return 'left';
 			}
-
 			/***************/
 			$('.show-details-btn').on('click', function(e) {
 				e.preventDefault();
@@ -771,7 +739,6 @@ if (isset($_GET["em"]) && isset($_GET["email"]) && isset($_GET["nombre"])) {
 				$(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
 			});
 			/***************/
-
 			/**
 			//add horizontal scrollbars to a simple table
 			$('#simple-table').css({'width':'2000px', 'max-width': 'none'}).wrap('<div style="width: 1000px;" />').parent().ace_scroll(
@@ -783,7 +750,6 @@ if (isset($_GET["em"]) && isset($_GET["email"]) && isset($_GET["nombre"])) {
 			  }
 			).css('padding-top', '12px');
 			*/
-
 		})
 	</script>
 </body>
