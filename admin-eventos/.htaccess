@@ -1,7 +1,0 @@
-### ISPConfig folder protection begin ###
-AuthType Basic
-AuthName "Members Only"
-AuthUserFile /var/www/clients/client91/web150/web/huawei/admin/.htpasswd
-require valid-user
-### ISPConfig folder protection end ###
-
