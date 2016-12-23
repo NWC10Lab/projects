@@ -25,6 +25,32 @@ function newLead($nombre,$apellidos,$email,$empresa,$dni,$idioma){
 }
 
 
+function selectEventosActivos($id){
+    $link=conexion();
+    $sql="select e.nombre , e.id from eventos as e inner join usuarios_eventos ue on ue.id_evento=e.id inner join usuarios u on u.id=ue.id_usuario where u.id=$id and e.fecha_baja is NULL";
+    $result=mysqli_query($link, $sql);
+    $numFilas= mysqli_num_rows($result);
+    $arrayDatos=array();
+    for($i=0;$i<$numFilas;$i++){
+        $arrayDatos[]=mysqli_fetch_assoc($result);
+    }
+    desconexion($link);
+    return $arrayDatos;
+}
+
+function selectEventosInactivos($id){
+    $link=conexion();
+    $sql="select e.nombre , e.id from eventos as e inner join usuarios_eventos ue on ue.id_evento=e.id inner join usuarios u on u.id=ue.id_usuario where u.id=$id and e.fecha_baja is not NULL";
+    $result=mysqli_query($link, $sql);
+    $numFilas= mysqli_num_rows($result);
+    $arrayDatos=array();
+    for($i=0;$i<$numFilas;$i++){
+        $arrayDatos[]=mysqli_fetch_assoc($result);
+    }
+    desconexion($link);
+    return $arrayDatos;
+}
+
 function selectLead($id){
     $link=conexion();
     $sql="select * from leads where id=$id ";
@@ -35,9 +61,9 @@ function selectLead($id){
     desconexion($link);
     return $arrayDatos;    
 }
-function selectLeads(){
+function selectLeads($id){
     $link=conexion();
-    $sql="select * from leads where activo=1";
+    $sql="select * from leads as l inner join leads_eventos le on le.id_lead=l.id where le.id_evento=$id and le.fecha_baja is NULL order by le.fecha_alta desc";
     $result=mysqli_query($link, $sql);
     $numFilas= mysqli_num_rows($result);
     $arrayDatos=array();
@@ -46,7 +72,6 @@ function selectLeads(){
     }
     desconexion($link);
     return $arrayDatos;
-    
 }
 function selectAsistentes(){
     $link=conexion();
