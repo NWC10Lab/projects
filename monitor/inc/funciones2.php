@@ -3,14 +3,14 @@
 
 //FUNCIONES SQL BASIC//
 function conexion() {
-    include './inc/conect.php';
-    $link = mysqli_connect($host, $user, $pass, $db_name);
-    mysqli_set_charset($link, 'utf8');
-    return $link;
+	include './inc/conect.php';
+	$link = mysqli_connect($host, $user, $pass, $db_name);
+	mysqli_set_charset($link, 'utf8');
+	return $link;
 }
 
 function desconexion($link) {
-    mysqli_close($link);
+	mysqli_close($link);
 }
 /* * ********************************************************
  * Funcion query: devuelve array con el estado de ejecucion de la query y el error en caso que haya
@@ -18,15 +18,15 @@ function desconexion($link) {
  * return: array (boolean ,  string error )
  * ******************************************************** */
 function query($sql) {
-    $link = conexion();
-    if (mysqli_query($link, $sql)) {
-        $result = array(true, "");
-    } else {
-        $error = mysqli_error($link);
-        $result = array(false, $error);
-    }
-    desconexion($link);
-    return $result;
+	$link = conexion();
+	if (mysqli_query($link, $sql)) {
+		$result = array(true, "");
+	} else {
+		$error = mysqli_error($link);
+		$result = array(false, $error);
+	}
+	desconexion($link);
+	return $result;
 }
 /* * ********************************************************
  * Funcion selectQuery: devuelve un array multidimensional segun la sql introducida como parámetro
@@ -34,15 +34,15 @@ function query($sql) {
  * return: array ( )
  * ******************************************************** */
 function selectQuery($sql) {
-    $link = conexion();
-    $result = mysqli_query($link, $sql) or die('Unable to execute query. ' . mysqli_error($link));
-    desconexion($link);
-    $num = mysqli_num_rows($result);
-    $datos = array();
-    for ($i = 0; $i < $num; $i++) {
-        $datos[$i] = mysqli_fetch_assoc($result);
-    }
-    return $datos;
+	$link = conexion();
+	$result = mysqli_query($link, $sql) or die('Unable to execute query. ' . mysqli_error($link));
+	desconexion($link);
+	$num = mysqli_num_rows($result);
+	$datos = array();
+	for ($i = 0; $i < $num; $i++) {
+		$datos[$i] = mysqli_fetch_assoc($result);
+	}
+	return $datos;
 }
 
 
@@ -55,27 +55,60 @@ function selectQuery($sql) {
 /* * ********************************************************
  * Funcion crearCliente: crea un nuevo cliente en la bbdd y 
  *                       crea relacion de las zonas especificadas
- * parametros: $username,$password(preguntar lina),
- *             $passwordPanel(la que usamos nosotros en el dashboard),
- *             $zonas(como quieras pero cada zona creará una relacion leads_zona)      
+ * parametros: 	$username : string
+ *				$password : md5 string
+ *             	$zonas	  : array(CPs)
  * return: array( true / false , "" /  tipo de error)
  * ******************************************************** */
-function crearCliente($username,$password,$passwordPanel,$zonas) {}
+function crearCliente($username,$password,$zonas) {
+	$error = false;
+	$password = md5($password);
+	$sql="INSERT into clientes (username, password) values($username,$password)";
+	$result=query($sql);
+	if ($result[0]){
+		$cliente_id = selectClienteUsername($username)['code'];
+		foreach ($zonas as $zona_id) {
+			$sql="INSERT into clientes_zonas (cliente_id, zona_id) values ($cliente_id, $zona_id)";
+			$result = mysqli_query($link, $sql);
+			$error |= $result[0];
+			$error_msg = $error ? $result[1] : "";
+		}
+	}
+	return $result;
+}
 
 /* * ********************************************************
  * Funcion desactivarCliente: pone el estado active = 0
- * parametros: $id_cliente       
+ * parametros: $id_cliente : int    
  * return: array( true / false , "" /  tipo de error)
  * ******************************************************** */
-function desactivarCliente($id) {}
+function desactivarCliente($id) {
+	$sql="UPDATE clientes set active = 0 where code = $id";
+	$result=query($sql);
+	return $result;
+}
 
 /* * ********************************************************
  * Funcion selectClientes: devuleve un array de clientes activos
- * parametros:       
+ * parametros: $username: string     
  * return: array( array clientes activos)
  * ******************************************************** */
-function selectClientes($username,$password,$passwordPanel) {}
+function selectClienteUsername($username) {
+	$sql = "SELECT * FROM clientes where username = $username";
+	$result = selectQuery($sql);
+	return empty($result) ? [] : $result[0];
+}
 
+/* * ********************************************************
+ * Funcion selectClientes: devuleve un array de clientes activos
+ * parametros: $id cliente : int
+ * return: array( array clientes activos)
+ * ******************************************************** */
+function selectClienteId($id) {
+	$sql = "SELECT * FROM clientes where code =";
+	$result = selectQuery($sql);
+	return empty($result) ? [] : $result[0];
+}
 
 /*LEADS*/
 
@@ -86,7 +119,9 @@ function selectClientes($username,$password,$passwordPanel) {}
  * parametros:  $id cliente ,$id_lead
  * return: array( array cliente activo/zona)->para utilizar la selectQuery
  * ******************************************************** */
-function selectLead($id_cliente,$id_lead) {}
+function selectLead($id_cliente,$id_lead) {
+
+}
 
 /* * ********************************************************
  * Funcion selectLeads: devuleve un array de clientes 
@@ -95,14 +130,18 @@ function selectLead($id_cliente,$id_lead) {}
  * parametros:  $id cliente ,$zona (opcional)
  * return: array( array clientes activos/zona)
  * ******************************************************** */
-function selectLeads($id_cliente,$zona=NULL) {}
+function selectLeads($id_cliente,$zona=NULL) {
+
+}
 
 /* * ********************************************************
  * Funcion setLeadFavorito: crea relacion cliente-lead en favoritos
  * parametros: $id_cliente ,$id_lead      
  * return: array( true / false , "" /  tipo de error)
  * ******************************************************** */
-function setLeadFavorito($id_cliente,$id_lead) {}
+function setLeadFavorito($id_cliente,$id_lead) {
+
+}
 
 /* * ********************************************************
  * Funcion selectLeads: devuleve un array de clientes favoritos
@@ -110,9 +149,9 @@ function setLeadFavorito($id_cliente,$id_lead) {}
  * parametros:  $id cliente
  * return: array( array clientes favoritos)
  * ******************************************************** */
-function selectLeadsFavoritos($id_cliente) {}
+function selectLeadsFavoritos($id_cliente) {
 
-
+}
 
 /* SESIONES
  * ********************************* */
@@ -122,10 +161,10 @@ function selectLeadsFavoritos($id_cliente) {}
  * return: 
  * ******************************************************** */
 function crearSesion($usuario,$zonas) {
-    session_start();
-    /*jm ver q mas necesitamos*/
-    $sesion = array($usuario['id'], $usuario['nombre'],$zonas);
-    $_SESSION['Monitor'] = $sesion;
+	session_start();
+	/*jm ver q mas necesitamos*/
+	$sesion = array($usuario['id'], $usuario['nombre'],$zonas);
+	$_SESSION['Monitor'] = $sesion;
 }
 
 /* * ********************************************************
@@ -135,12 +174,12 @@ function crearSesion($usuario,$zonas) {
  * ******************************************************** */
 
 function comprobarSesion() {
-    session_start();
-    if (isset($_SESSION['Monitor'])) {
-        return true;
-    } else {
-        return false;
-    }
+	session_start();
+	if (isset($_SESSION['Monitor'])) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 /* * ********************************************************
@@ -150,7 +189,7 @@ function comprobarSesion() {
  * ******************************************************** */
 
 function salir() {
-    return session_destroy();
+	return session_destroy();
 }
 
 
