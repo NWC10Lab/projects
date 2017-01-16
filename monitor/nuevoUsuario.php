@@ -1,19 +1,21 @@
 <?php
-include_once("inc/altaUsuario.php");
-$suscripciones=selectSuscriopciones();
+include_once("inc/funciones2.php");
+$zonas= array(array('id'=>'1','zona'=>'Barrio Salamanca'),array('id'=>'2','zona'=>'Barrio Chamberí'));//getZonas();
 $result= array(true,"");
-
+if(isset($_POST['formlog'])){
+    echo "<pre>".var_dump($_POST)."</pre>";
+}
 if(
    isset($_POST["formlog"])&&!empty($_POST["formlog"])&&
-   isset($_POST["nombre"])&&!empty($_POST["nombre"])&&
-   isset($_POST["email"])&&!empty($_POST["email"])&&
+   isset($_POST["username"])&&!empty($_POST["username"])&&
    isset($_POST["password"])&&!empty($_POST["password"])&&
    isset($_POST["password2"])&&!empty($_POST["password2"])&&
    $_POST["password"]==$_POST["password2"]&&
-   isset($_POST["tipo_suscripcion"])&&$_POST["tipo_suscripcion"]!=0
+   isset($_POST["zonas"])&& count($_POST["zonas"]>0)
    ){
        extract($_POST);
-       $result=newUsuario($nombre,$email,$password,$tipo_suscripcion);
+       $result=crearCliente($username,$password,$zonas);
+       $result[1] = "Usuario creado con éxito";
 }else if(isset($_POST["formlog"])){
     $result= array(false,"Rellene todos los campos");
     /*comprobar datos
@@ -54,16 +56,13 @@ if(
             <div>
                 <h1 class="logo-name "><img src="img/logo_cnw.png" style="max-width: 300px;"></h1>
             </div>
-            <h2><strong>Alta Nuevo Usuario</strong></h2>
+            <h2><strong>Dolphinder</strong></h2>
             
-            <p>Rellene todos los campos</p> 
+            <p><strong>Alta Nuevo Usuario</strong></p> 
             
             <form class="m-t" role="" action="<?=$_SERVER['PHP_SELF']?>" method="post"> 
                 <div class="form-group">
-                    <input name="nombre" type="text" class="form-control" placeholder="Nombre" required="">
-                </div>
-                <div class="form-group">
-                    <input name="email" type="email" class="form-control" placeholder="Email" required="">
+                    <input name="username" type="text" class="form-control" placeholder="a@b.com" required="">
                 </div>
                 <div class="form-group">
                     <input name="password" type="password" class="form-control" placeholder="Contraseña" required="">
@@ -71,11 +70,14 @@ if(
                 <div class="form-group">
                     <input name="password2" type="password" class="form-control" placeholder="Repetir Contraseña" required="">
                 </div>
-                <div class="form-group">
-                    <select name="tipo_suscripcion">
-                        <option value="0">Eligue una suscripción</option>
-                        <?php for($i=0;$i<count($suscripciones);$i++){ ?>
+                <div class="form-group row">
+                    <select name="zonas[]" multiple class="col-xs-12" id="zonas" required>
+<!--                        <option value="0">Zonas</option>-->
+                        <?php for($i=30;$i<count($suscripciones);$i++){ ?>
                         <option name="tipo_suscripcion" value="<?= $suscripciones[$i]["id"]?>">Tipo suscripcion: <?= $suscripciones[$i]["nombre"]." (Eventos: ".$suscripciones[$i]["max_eventos"]?>)</option>
+                        <?php } ?>
+                        <?php foreach($zonas as $zona){ ?>
+                            <option name="zona" value="<?= $zona["id"]?>"><?= $zona["zona"]?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -96,7 +98,6 @@ if(
     <!-- Mainly scripts -->
     <script src="js/jquery-2.1.1.js"></script>
     <script src="js/bootstrap.min.js"></script>
-
 </body>
 
 

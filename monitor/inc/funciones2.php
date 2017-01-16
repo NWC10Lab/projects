@@ -63,15 +63,15 @@ function selectQuery($sql) {
 function crearCliente($username,$password,$zonas) {
 	$error = false;
 	$password = md5($password);
-	$sql = "INSERT INTO clientes (username, password) 
-			VALUES ('$username','$password')";
-	$result = query($sql);
+	$sql="INSERT into clientes (username, password) values('$username','$password')";
+	$result=query($sql);
 	if ($result[0]){
 		$cliente_id = selectClienteUsername($username)['code'];
+                echo $cliente_id;
 		foreach ($zonas as $zona_id) {
-			$sql = "INSERT INTO clientes_zonas (cliente_id, zona_id) 
-					VALUES ('$cliente_id', '$zona_id')";
-			$result = mysqli_query($link, $sql);
+			$sql="INSERT into clientes_zonas (cliente_id, zona_id) values ('$cliente_id', '$zona_id')";
+                        echo $sql."<br>";
+			$result = query($sql);
 			$error |= $result[0];
 			$error_msg = $error ? $result[1] : "";
 		}
@@ -96,9 +96,8 @@ function desactivarCliente($id) {
  * return: array( array clientes activos)
  * ******************************************************** */
 function selectClienteUsername($username) {
-	$sql = "SELECT * 
-			FROM clientes 
-			WHERE username = $username";
+	$sql = "SELECT * FROM clientes where username = '$username'";
+        echo $sql."<br>";
 	$result = selectQuery($sql);
 	return empty($result) ? [] : $result[0];
 }
