@@ -15,6 +15,7 @@ if(
    ){
        extract($_POST);
        $result=crearCliente($username,$password,$zonas);
+       $result[1] = "Usuario creado con éxito";
 }else if(isset($_POST["formlog"])){
     $result= array(false,"Rellene todos los campos");
     /*comprobar datos
