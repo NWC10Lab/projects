@@ -70,17 +70,22 @@ if(
                 <div class="form-group">
                     <input name="password2" type="password" class="form-control" placeholder="Repetir Contraseña" required="">
                 </div>
-                <div class="form-group row">
-                    <select name="zonas[]" multiple class="col-xs-12" id="zonas" required>
-<!--                        <option value="0">Zonas</option>-->
-                        <?php for($i=30;$i<count($suscripciones);$i++){ ?>
-                        <option name="tipo_suscripcion" value="<?= $suscripciones[$i]["id"]?>">Tipo suscripcion: <?= $suscripciones[$i]["nombre"]." (Eventos: ".$suscripciones[$i]["max_eventos"]?>)</option>
-                        <?php } ?>
-                        <?php foreach($zonas as $zona){ ?>
-                            <option name="zona" value="<?= $zona["id"]?>"><?= $zona["zona"]?></option>
-                        <?php } ?>
-                    </select>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group col-xs-12">
+                            <select name="zonas[]" multiple id="zonas" required>
+        <!--                        <option value="0">Zonas</option>-->
+                                <?php for($i=30;$i<count($suscripciones);$i++){ ?>
+                                <option name="tipo_suscripcion" value="<?= $suscripciones[$i]["id"]?>">Tipo suscripcion: <?= $suscripciones[$i]["nombre"]." (Eventos: ".$suscripciones[$i]["max_eventos"]?>)</option>
+                                <?php } ?>
+                                <?php foreach($zonas as $zona){ ?>
+                                    <option name="zona" value="<?= $zona["id"]?>"><?= $zona["zona"]?></option>
+                                <?php } ?>
+                            </select>
+                        </div>        
+                    </div>
                 </div>
+                
                 <input type="submit" class="btn btn-primary block full-width m-b" value="Guardar" name="formlog">
                 
                 <?php if($result[0]){ ?>
