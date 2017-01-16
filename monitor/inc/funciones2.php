@@ -64,13 +64,13 @@ function crearCliente($username,$password,$zonas) {
 	$error = false;
 	$password = md5($password);
 	$sql = "INSERT INTO clientes (username, password) 
-			VALUES ($username,$password)";
+			VALUES ('$username','$password')";
 	$result = query($sql);
 	if ($result[0]){
 		$cliente_id = selectClienteUsername($username)['code'];
 		foreach ($zonas as $zona_id) {
 			$sql = "INSERT INTO clientes_zonas (cliente_id, zona_id) 
-					VALUES ($cliente_id, $zona_id)";
+					VALUES ('$cliente_id', '$zona_id')";
 			$result = mysqli_query($link, $sql);
 			$error |= $result[0];
 			$error_msg = $error ? $result[1] : "";
@@ -85,7 +85,7 @@ function crearCliente($username,$password,$zonas) {
  * return: array( true / false , "" /  tipo de error)
  * ******************************************************** */
 function desactivarCliente($id) {
-	$sql = "UPDATE clientes set active = 0 where code = $id";
+	$sql = "UPDATE clientes set active = 0 where code = '$id'";
 	$result = query($sql);
 	return $result;
 }
@@ -111,7 +111,7 @@ function selectClienteUsername($username) {
 function selectClienteId($id) {
 	$sql = "SELECT * 
 			FROM clientes 
-			WHERE code =$id";
+			WHERE code ='$id'";
 	$result = selectQuery($sql);
 	return empty($result) ? [] : $result[0];
 }
@@ -128,7 +128,7 @@ function selectClienteId($id) {
 function selectLead($id_lead) {
 	$sql = "SELECT * 
 			FROM leads 
-			WHERE id = $id_lead";
+			WHERE id = '$id_lead'";
 	$result = selectQuery($sql);
 	return empty($result) ? [] : $result[0];
 }
@@ -145,7 +145,7 @@ function selectLeads($id_cliente,$zona=NULL) {
 			FROM leads 
 			INNER JOIN clientes_zonas 
 			ON zona_id = zona 
-			WHERE cliente_id = $id_cliente";
+			WHERE cliente_id = '$id_cliente'";
 	$result = selectQuery($sql);
 	return $result;
 }
@@ -160,7 +160,7 @@ function setLeadFavorito($id_cliente,$id_lead) {
 			FROM clientes_favoritos 
 			INNER JOIN clientes 
 			ON cliente_id = username 
-			WHERE cliente_id = $id_cliente";
+			WHERE cliente_id = '$id_cliente'";
 	$result = selectQuery($sql);
 	return $result;
 }
@@ -194,7 +194,7 @@ function getZonas() {
 function selectZona($id) {
 	$sql = "SELECT * 
 			FROM zonas
-			WHERE id_zona = $id";
+			WHERE id_zona = '$id'";
 	$result = selectQuery($sql);
 	return $result;
 }
@@ -209,9 +209,9 @@ function selectZona($id) {
  * ******************************************************** */
 function login ($username, $password) {
 	$password = md5($password);
-	$sql = "SELECT $username, $password
+	$sql = "SELECT username , password
 			FROM clientes 
-			WHERE username = $username";
+			WHERE username = '$username'";
 	$result = selectQuery($sql);
 	return empty($result) ? array(false, "") : array(true, $result[0]);
 }
