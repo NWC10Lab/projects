@@ -63,12 +63,14 @@ function selectQuery($sql) {
 function crearCliente($username,$password,$zonas) {
 	$error = false;
 	$password = md5($password);
-	$sql="INSERT into clientes (username, password) values($username,$password)";
-	$result=query($sql);
+	$sql = "INSERT INTO clientes (username, password) 
+			VALUES ($username,$password)";
+	$result = query($sql);
 	if ($result[0]){
 		$cliente_id = selectClienteUsername($username)['code'];
 		foreach ($zonas as $zona_id) {
-			$sql="INSERT into clientes_zonas (cliente_id, zona_id) values ($cliente_id, $zona_id)";
+			$sql = "INSERT INTO clientes_zonas (cliente_id, zona_id) 
+					VALUES ($cliente_id, $zona_id)";
 			$result = mysqli_query($link, $sql);
 			$error |= $result[0];
 			$error_msg = $error ? $result[1] : "";
@@ -83,8 +85,8 @@ function crearCliente($username,$password,$zonas) {
  * return: array( true / false , "" /  tipo de error)
  * ******************************************************** */
 function desactivarCliente($id) {
-	$sql="UPDATE clientes set active = 0 where code = $id";
-	$result=query($sql);
+	$sql = "UPDATE clientes set active = 0 where code = $id";
+	$result = query($sql);
 	return $result;
 }
 
@@ -94,7 +96,9 @@ function desactivarCliente($id) {
  * return: array( array clientes activos)
  * ******************************************************** */
 function selectClienteUsername($username) {
-	$sql = "SELECT * FROM clientes where username = $username";
+	$sql = "SELECT * 
+			FROM clientes 
+			WHERE username = $username";
 	$result = selectQuery($sql);
 	return empty($result) ? [] : $result[0];
 }
@@ -105,7 +109,9 @@ function selectClienteUsername($username) {
  * return: array( array clientes activos)
  * ******************************************************** */
 function selectClienteId($id) {
-	$sql = "SELECT * FROM clientes where code =";
+	$sql = "SELECT * 
+			FROM clientes 
+			WHERE code =$id";
 	$result = selectQuery($sql);
 	return empty($result) ? [] : $result[0];
 }
@@ -116,22 +122,32 @@ function selectClienteId($id) {
  * Funcion selectLeads: devuleve un array del cliente
  *                         relacionados con el cliente.
  *                         si se da zona solo de esa zona.
- * parametros:  $id cliente ,$id_lead
+ * parametros: $id_lead
  * return: array( array cliente activo/zona)->para utilizar la selectQuery
  * ******************************************************** */
-function selectLead($id_cliente,$id_lead) {
-
+function selectLead($id_lead) {
+	$sql = "SELECT * 
+			FROM leads 
+			WHERE id = $id_lead";
+	$result = selectQuery($sql);
+	return empty($result) ? [] : $result[0];
 }
 
 /* * ********************************************************
- * Funcion selectLeads: devuleve un array de clientes 
+ * Funcion selectLeads: devuleve un array de leads 
  *                         relacionados con el cliente.
  *                         si se da zona solo de esa zona.
  * parametros:  $id cliente ,$zona (opcional)
  * return: array( array clientes activos/zona)
  * ******************************************************** */
 function selectLeads($id_cliente,$zona=NULL) {
-
+	$sql = "SELECT * 
+			FROM leads 
+			INNER JOIN clientes_zonas 
+			ON zona_id = zona 
+			WHERE cliente_id = $id_cliente";
+	$result = selectQuery($sql);
+	return $result;
 }
 
 /* * ********************************************************
@@ -140,7 +156,13 @@ function selectLeads($id_cliente,$zona=NULL) {
  * return: array( true / false , "" /  tipo de error)
  * ******************************************************** */
 function setLeadFavorito($id_cliente,$id_lead) {
-
+	$sql = "SELECT * 
+			FROM clientes_favoritos 
+			INNER JOIN clientes 
+			ON cliente_id = username 
+			WHERE cliente_id = $id_cliente";
+	$result = selectQuery($sql);
+	return $result;
 }
 
 /* * ********************************************************
