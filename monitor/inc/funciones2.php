@@ -108,7 +108,7 @@ function selectClienteUsername($username) {
  * return: array( array clientes activos)
  * ******************************************************** */
 function selectClienteId($id) {
-	$sql = "SELECT * FROM clientes where code =";
+	$sql = "SELECT * FROM clientes where code =$id";
 	$result = selectQuery($sql);
 	return empty($result) ? [] : $result[0];
 }
@@ -123,7 +123,7 @@ function selectClienteId($id) {
  * return: array( array cliente activo/zona)->para utilizar la selectQuery
  * ******************************************************** */
 function selectLead($id_cliente,$id_lead) {
-
+	$sql = "SELECT * FROM "
 }
 
 /* * ********************************************************
